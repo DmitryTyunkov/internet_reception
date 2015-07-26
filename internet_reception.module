@@ -1,0 +1,99 @@
+<?php
+/**
+ * @file
+ * Build page and form for internet reception.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function internet_reception_menu() {
+  $items = array();
+  $items['internet_reception_page'] = array(
+    'title' => 'Интернет приемная',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('internet_reception_form'),
+    'access callback' => 'user_is_logged_in',
+	'menu_name' => 'main-menu'
+  );
+  return $items;
+}
+
+/**
+ * Build internet reception form.
+ */
+function internet_reception_form($form, $form_state) {
+  $form = array();
+  $form['last-name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Фамилия'),
+	'#maxlength' => 255,
+	'#required' => TRUE,
+  );
+  $form['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Имя'),
+	'#maxlength' => 255,
+	'#required' => TRUE,
+  );
+  $form['middle-name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Отчество'),
+	'#maxlength' => 255,
+	'#required' => TRUE,
+  );
+  $form['age'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Возраст'),
+	'#maxlength' => 255,
+	'#required' => TRUE,
+  );
+  $form['topic-appeal'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Тема обращения'),
+	'#maxlength' => 255,
+	'#required' => TRUE,
+  );
+  $form['text-of-the-appeal'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Текст обращения'),
+	'#required' => TRUE,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Validate function for internet_reception_form.
+ */
+function internet_reception_form_validate($form, &$form_state) {
+  if (!is_numeric($form_state['values']['age'])) {
+    form_set_error('age', t('Поле "Возраст" должно быть числовым.'));
+  }
+  if ($form_state['values']['age'] <= 0) {
+	form_set_error('age', t('Поле "Возраст" не должно быть отрицательным.'));
+  }
+}
+
+/**
+ * Submit function for internet_reception_form.
+ */
+function internet_reception_form_submit($form, &$form_state) {
+  global $user;
+  $module = 'internet_reception';
+  $key = 'key';
+  $language = 'ru';
+  $params = array();
+  $from = $user->mail;
+  $send = FALSE;
+  $message = drupal_mail($module, $key, variable_get('site_mail'), $language, $params, $from, $send); // формируем сообщение
+  $message['subject'] = 'Запрос интернет приемной';
+  $message['body'] = array();
+  $message['body'][] = "Фамилия: ".$form_state['values']['last-name']."\nИмя: ".$form_state['values']['name']."\nОтчество: ".$form_state['values']['middle-name']."\nВозраст: ".$form_state['values']['age']."\nТема обращения: ".$form_state['values']['topic-appeal']."\nТекст обращения: ".$form_state['values']['text-of-the-appeal'];
+  $system = drupal_mail_system($module, $key);
+  $message = $system->format($message);
+  $message['result'] = $system->mail($message);
+}
