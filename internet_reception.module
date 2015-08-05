@@ -10,7 +10,7 @@
 function internet_reception_menu() {
   $items = array();
   $items['internet_reception_page'] = array(
-    'title' => 'Интернет приемная',
+    'title' => 'Online reception',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('internet_reception_form'),
     'access callback' => 'user_is_logged_in',
@@ -26,37 +26,37 @@ function internet_reception_form($form, $form_state) {
   $form = array();
   $form['last-name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Фамилия'),
+    '#title' => t('Last name'),
 	'#maxlength' => 255,
 	'#required' => TRUE,
   );
   $form['name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Имя'),
+    '#title' => t('Name'),
 	'#maxlength' => 255,
 	'#required' => TRUE,
   );
   $form['middle-name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Отчество'),
+    '#title' => t('Middle name'),
 	'#maxlength' => 255,
 	'#required' => TRUE,
   );
   $form['age'] = array(
     '#type' => 'textfield',
-    '#title' => t('Возраст'),
+    '#title' => t('Age'),
 	'#maxlength' => 255,
 	'#required' => TRUE,
   );
   $form['topic-appeal'] = array(
     '#type' => 'textfield',
-    '#title' => t('Тема обращения'),
+    '#title' => t('Topic appeal'),
 	'#maxlength' => 255,
 	'#required' => TRUE,
   );
   $form['text-of-the-appeal'] = array(
     '#type' => 'textarea',
-    '#title' => t('Текст обращения'),
+    '#title' => t('Text of the appeal'),
 	'#required' => TRUE,
   );
   $form['submit'] = array(
@@ -71,10 +71,10 @@ function internet_reception_form($form, $form_state) {
  */
 function internet_reception_form_validate($form, &$form_state) {
   if (!is_numeric($form_state['values']['age'])) {
-    form_set_error('age', t('Поле "Возраст" должно быть числовым.'));
+    form_set_error('age', t('The "Age" must be numeric'));
   }
   if ($form_state['values']['age'] <= 0) {
-	form_set_error('age', t('Поле "Возраст" не должно быть отрицательным.'));
+    form_set_error('age', t('The "Age" should not be negative.'));
   }
 }
 
@@ -89,10 +89,16 @@ function internet_reception_form_submit($form, &$form_state) {
   $params = array();
   $from = $user->mail;
   $send = FALSE;
-  $message = drupal_mail($module, $key, variable_get('site_mail'), $language, $params, $from, $send); // формируем сообщение
-  $message['subject'] = 'Запрос интернет приемной';
+  $message = drupal_mail($module, $key, variable_get('site_mail'),
+    $language, $params, $from, $send); // формируем сообщение
+  $message['subject'] = 'Request online reception';
   $message['body'] = array();
-  $message['body'][] = "Фамилия: ".$form_state['values']['last-name']."\nИмя: ".$form_state['values']['name']."\nОтчество: ".$form_state['values']['middle-name']."\nВозраст: ".$form_state['values']['age']."\nТема обращения: ".$form_state['values']['topic-appeal']."\nТекст обращения: ".$form_state['values']['text-of-the-appeal'];
+  $message['body'][] = "Last name: " . $form_state['values']['last-name'] . "\n"
+    . "Name: " . $form_state['values']['name'] . "\n"
+    . "Middle name: " . $form_state['values']['middle-name'] . "\n"
+    . "Age: " . $form_state['values']['age'] . "\n"
+    . "Topic appeal: " . $form_state['values']['topic-appeal'] . "\n"
+    . "Text of the appeal: " . $form_state['values']['text-of-the-appeal'];
   $system = drupal_mail_system($module, $key);
   $message = $system->format($message);
   $message['result'] = $system->mail($message);

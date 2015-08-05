@@ -1,6 +1,6 @@
-name = Интернет-приемная
-description = Модуль блока для интернет-приемной
+name = Online reception
+description = Online reception module
 packege = "Other"
 core = 7.x
-version = "7.x-1.0"
+version = "7.x-1.1"
 files[] = internet_reception.module
