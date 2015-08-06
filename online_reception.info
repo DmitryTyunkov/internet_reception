@@ -3,4 +3,4 @@ description = Online reception module
 packege = "Other"
 core = 7.x
 version = "7.x-1.1"
-files[] = internet_reception.module
+files[] = online_reception.module

@@ -7,14 +7,14 @@
 /**
  * Implements hook_menu().
  */
-function internet_reception_menu() {
+function online_reception_menu() {
   $items = array();
-  $items['internet_reception_page'] = array(
+  $items['online_reception_page'] = array(
     'title' => 'Online reception',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('internet_reception_form'),
+    'page arguments' => array('online_reception_form'),
     'access callback' => 'user_is_logged_in',
-	'menu_name' => 'main-menu'
+    'menu_name' => 'main-menu'
   );
   return $items;
 }
@@ -22,42 +22,42 @@ function internet_reception_menu() {
 /**
  * Build internet reception form.
  */
-function internet_reception_form($form, $form_state) {
+function online_reception_form($form, $form_state) {
   $form = array();
   $form['last-name'] = array(
     '#type' => 'textfield',
     '#title' => t('Last name'),
-	'#maxlength' => 255,
-	'#required' => TRUE,
+    '#maxlength' => 255,
+    '#required' => TRUE,
   );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-	'#maxlength' => 255,
-	'#required' => TRUE,
+    '#maxlength' => 255,
+    '#required' => TRUE,
   );
   $form['middle-name'] = array(
     '#type' => 'textfield',
     '#title' => t('Middle name'),
-	'#maxlength' => 255,
-	'#required' => TRUE,
+    '#maxlength' => 255,
+    '#required' => TRUE,
   );
   $form['age'] = array(
     '#type' => 'textfield',
     '#title' => t('Age'),
-	'#maxlength' => 255,
-	'#required' => TRUE,
+    '#maxlength' => 255,
+    '#required' => TRUE,
   );
   $form['topic-appeal'] = array(
     '#type' => 'textfield',
     '#title' => t('Topic appeal'),
-	'#maxlength' => 255,
-	'#required' => TRUE,
+    '#maxlength' => 255,
+    '#required' => TRUE,
   );
   $form['text-of-the-appeal'] = array(
     '#type' => 'textarea',
     '#title' => t('Text of the appeal'),
-	'#required' => TRUE,
+    '#required' => TRUE,
   );
   $form['submit'] = array(
     '#type' => 'submit',
@@ -69,7 +69,7 @@ function internet_reception_form($form, $form_state) {
 /**
  * Validate function for internet_reception_form.
  */
-function internet_reception_form_validate($form, &$form_state) {
+function online_reception_form_validate($form, &$form_state) {
   if (!is_numeric($form_state['values']['age'])) {
     form_set_error('age', t('The "Age" must be numeric'));
   }
@@ -81,7 +81,7 @@ function internet_reception_form_validate($form, &$form_state) {
 /**
  * Submit function for internet_reception_form.
  */
-function internet_reception_form_submit($form, &$form_state) {
+function online_reception_form_submit($form, &$form_state) {
   global $user;
   $module = 'internet_reception';
   $key = 'key';
